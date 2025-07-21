@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -19,10 +19,11 @@
         .calculator {
             background: #2c3e50;
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             max-width: 400px;
             width: 100%;
+            min-width: 280px;
         }
 
         .title {
@@ -41,7 +42,7 @@
         }
 
         .currency-btn {
-            padding: 10px 20px;
+            padding: 12px 20px;
             border: 2px solid #ddd;
             border-radius: 10px;
             background: white;
@@ -51,6 +52,9 @@
             align-items: center;
             gap: 8px;
             font-size: 16px;
+            min-height: 44px;
+            flex: 1;
+            justify-content: center;
         }
 
         .currency-btn.active {
@@ -99,12 +103,13 @@
             align-items: center;
             justify-content: flex-end;
             word-break: break-all;
+            overflow-wrap: break-word;
         }
 
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
 
         .btn {
@@ -115,11 +120,22 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            user-select: none;
         }
 
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .btn.number {
@@ -159,6 +175,145 @@
         .btn.backspace {
             background: #fd7e14;
             color: white;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .calculator {
+                padding: 15px;
+                border-radius: 15px;
+                max-width: 100%;
+            }
+
+            .title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .currency-selector {
+                margin-bottom: 15px;
+                gap: 8px;
+            }
+
+            .currency-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+                min-height: 40px;
+            }
+
+            .display {
+                padding: 15px;
+                font-size: 20px;
+                min-height: 50px;
+                margin-bottom: 15px;
+            }
+
+            .buttons {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 15px;
+                font-size: 16px;
+                min-height: 50px;
+                border-radius: 8px;
+            }
+
+            .exchange-rate {
+                font-size: 12px;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .calculator {
+                padding: 10px;
+            }
+
+            .title {
+                font-size: 18px;
+            }
+
+            .currency-btn {
+                padding: 8px 12px;
+                font-size: 13px;
+                gap: 5px;
+            }
+
+            .flag {
+                width: 20px;
+                height: 14px;
+            }
+
+            .display {
+                padding: 12px;
+                font-size: 18px;
+                min-height: 45px;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 14px;
+                min-height: 45px;
+            }
+
+            .buttons {
+                gap: 6px;
+            }
+        }
+
+        /* Landscape orientation for mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+
+            .calculator {
+                padding: 10px;
+                max-height: 90vh;
+            }
+
+            .title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .currency-selector {
+                margin-bottom: 10px;
+            }
+
+            .display {
+                padding: 10px;
+                margin-bottom: 10px;
+                min-height: 40px;
+                font-size: 18px;
+            }
+
+            .btn {
+                padding: 10px;
+                min-height: 40px;
+                font-size: 14px;
+            }
+
+            .buttons {
+                gap: 5px;
+            }
+
+            .exchange-rate {
+                margin-top: 5px;
+                font-size: 11px;
+            }
+        }
+
+        /* High DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .btn {
+                border-width: 1px;
+            }
         }
     </style>
 </head>
@@ -201,7 +356,7 @@
             <button class="btn operator" onclick="inputOperator('+')">+</button>
             
             <button class="btn number" onclick="inputNumber('0')">0</button>
-            <button class="btn number" onclick="inputNumber('.')">.</button>
+            <button class="btn number" onclick="inputNumber('.')">,</button>
             <button class="btn equals" onclick="calculate()">=</button>
             <button class="btn convert" onclick="convertCurrency()">Конвертиране</button>
         </div>
@@ -289,7 +444,7 @@
             previousInput = null;
             operator = null;
             waitingForOperand = false;
-            switchCurrency('EUR'); // Добавяме връщане към EUR по подразбиране
+            switchCurrency('EUR');
             updateDisplay();
         }
 
@@ -351,8 +506,8 @@
         document.addEventListener('keydown', (event) => {
             const key = event.key;
             
-            if (key >= '0' && key <= '9' || key === '.') {
-                inputNumber(key);
+            if (key >= '0' && key <= '9' || key === '.' || key === ',') {
+                inputNumber(key === ',' ? '.' : key);
             } else if (key === '+' || key === '-' || key === '*' || key === '/') {
                 inputOperator(key);
             } else if (key === 'Enter' || key === '=') {
@@ -360,9 +515,19 @@
             } else if (key === 'Escape' || key === 'c' || key === 'C') {
                 clearAll();
             } else if (key === 'Backspace') {
-                backspace(); // Променяме от clearEntry() на backspace()
+                backspace();
             }
         });
+
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     </script>
 </body>
 </html>
