@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EURO Калкулатор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calculator {
+            background: #2c3e50;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .currency-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .currency-btn {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .currency-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .flag {
+            width: 24px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        .flag.eu {
+            background: #003399;
+            position: relative;
+        }
+
+        .flag.eu::after {
+            content: '★★★★';
+            position: absolute;
+            color: #FFCC00;
+            font-size: 8px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .flag.bg {
+            background: linear-gradient(to bottom, white 33%, #00966E 33%, #00966E 66%, #D62612 66%);
+        }
+
+        .display {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            word-break: break-all;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn.number {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn.operator {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn.equals {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn.clear {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn.convert {
+            background: #17a2b8;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .exchange-rate {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .btn.backspace {
+            background: #fd7e14;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="title">EURO Калкулатор</div>
+        
+        <div class="currency-selector">
+            <button class="currency-btn active" id="eurBtn">
+                <div class="flag eu"></div>
+                EUR
+            </button>
+            <button class="currency-btn" id="bgnBtn">
+                <div class="flag bg"></div>
+                BGN
+            </button>
+        </div>
+
+        <div class="display" id="display">0</div>
+
+        <div class="buttons">
+            <button class="btn clear" onclick="clearAll()">C</button>
+            <button class="btn clear" onclick="clearEntry()">CE</button>
+            <button class="btn backspace" onclick="backspace()">←</button>
+            <button class="btn operator" onclick="inputOperator('/')">/</button>
+            
+            <button class="btn number" onclick="inputNumber('7')">7</button>
+            <button class="btn number" onclick="inputNumber('8')">8</button>
+            <button class="btn number" onclick="inputNumber('9')">9</button>
+            <button class="btn operator" onclick="inputOperator('*')">×</button>
+            
+            <button class="btn number" onclick="inputNumber('4')">4</button>
+            <button class="btn number" onclick="inputNumber('5')">5</button>
+            <button class="btn number" onclick="inputNumber('6')">6</button>
+            <button class="btn operator" onclick="inputOperator('-')">-</button>
+            
+            <button class="btn number" onclick="inputNumber('1')">1</button>
+            <button class="btn number" onclick="inputNumber('2')">2</button>
+            <button class="btn number" onclick="inputNumber('3')">3</button>
+            <button class="btn operator" onclick="inputOperator('+')">+</button>
+            
+            <button class="btn number" onclick="inputNumber('0')">0</button>
+            <button class="btn number" onclick="inputNumber('.')">.</button>
+            <button class="btn equals" onclick="calculate()">=</button>
+            <button class="btn convert" onclick="convertCurrency()">Конвертиране</button>
+        </div>
+
+        <div class="exchange-rate">
+            Курс: 1 EUR = 1.95583 BGN
+        </div>
+    </div>
+
+    <script>
+        const EXCHANGE_RATE = 1.95583;
+        let currentCurrency = 'EUR';
+        let display = document.getElementById('display');
+        let currentInput = '0';
+        let operator = null;
+        let previousInput = null;
+        let waitingForOperand = false;
+
+        function updateDisplay() {
+            display.textContent = currentInput;
+        }
+
+        function inputNumber(num) {
+            if (waitingForOperand) {
+                currentInput = num;
+                waitingForOperand = false;
+            } else {
+                if (currentInput === '0' && num !== '.') {
+                    currentInput = num;
+                } else {
+                    currentInput += num;
+                }
+            }
+            updateDisplay();
+        }
+
+        function inputOperator(nextOperator) {
+            const inputValue = parseFloat(currentInput);
+
+            if (previousInput === null) {
+                previousInput = inputValue;
+            } else if (operator) {
+                const currentValue = previousInput || 0;
+                const newValue = performCalculation(currentValue, inputValue, operator);
+
+                currentInput = String(newValue);
+                previousInput = newValue;
+                updateDisplay();
+            }
+
+            waitingForOperand = true;
+            operator = nextOperator;
+        }
+
+        function calculate() {
+            const inputValue = parseFloat(currentInput);
+
+            if (previousInput !== null && operator) {
+                const newValue = performCalculation(previousInput, inputValue, operator);
+                currentInput = String(newValue);
+                previousInput = null;
+                operator = null;
+                waitingForOperand = true;
+                updateDisplay();
+            }
+        }
+
+        function performCalculation(firstOperand, secondOperand, operator) {
+            switch (operator) {
+                case '+':
+                    return firstOperand + secondOperand;
+                case '-':
+                    return firstOperand - secondOperand;
+                case '*':
+                    return firstOperand * secondOperand;
+                case '/':
+                    return firstOperand / secondOperand;
+                default:
+                    return secondOperand;
+            }
+        }
+
+        function clearAll() {
+            currentInput = '0';
+            previousInput = null;
+            operator = null;
+            waitingForOperand = false;
+            switchCurrency('EUR'); // Добавяме връщане към EUR по подразбиране
+            updateDisplay();
+        }
+
+        function clearEntry() {
+            currentInput = '0';
+            updateDisplay();
+        }
+
+        function backspace() {
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        function convertCurrency() {
+            const value = parseFloat(currentInput);
+            if (isNaN(value)) return;
+
+            let convertedValue;
+            if (currentCurrency === 'EUR') {
+                convertedValue = value * EXCHANGE_RATE;
+                switchCurrency('BGN');
+            } else {
+                convertedValue = value / EXCHANGE_RATE;
+                switchCurrency('EUR');
+            }
+
+            currentInput = convertedValue.toFixed(4).replace(/\.?0+$/, '');
+            updateDisplay();
+        }
+
+        function switchCurrency(currency) {
+            currentCurrency = currency;
+            const eurBtn = document.getElementById('eurBtn');
+            const bgnBtn = document.getElementById('bgnBtn');
+
+            if (currency === 'EUR') {
+                eurBtn.classList.add('active');
+                bgnBtn.classList.remove('active');
+            } else {
+                bgnBtn.classList.add('active');
+                eurBtn.classList.remove('active');
+            }
+        }
+
+        // Event listeners за бутоните за валута
+        document.getElementById('eurBtn').addEventListener('click', () => {
+            switchCurrency('EUR');
+        });
+
+        document.getElementById('bgnBtn').addEventListener('click', () => {
+            switchCurrency('BGN');
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9' || key === '.') {
+                inputNumber(key);
+            } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+                inputOperator(key);
+            } else if (key === 'Enter' || key === '=') {
+                calculate();
+            } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                clearAll();
+            } else if (key === 'Backspace') {
+                backspace(); // Променяме от clearEntry() на backspace()
+            }
+        });
+    </script>
+</body>
+</html>
