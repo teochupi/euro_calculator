@@ -191,6 +191,20 @@
       color: white;
     }
 
+    /* ✅ Footer (ненатрапчив, професионален) */
+    .app-footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.2px;
+    }
+
+    .app-footer strong {
+      color: rgba(255, 255, 255, 0.80);
+      font-weight: 600;
+    }
+
     /* Mobile optimizations */
     @media (max-width: 480px) {
       body { padding: 5px; }
@@ -202,6 +216,7 @@
       .buttons { gap: 8px; }
       .btn { padding: 15px; font-size: 16px; min-height: 50px; border-radius: 8px; }
       .exchange-rate { font-size: 12px; margin-top: 10px; }
+      .app-footer { font-size: 11px; margin-top: 12px; }
     }
 
     @media (max-width: 320px) {
@@ -212,6 +227,7 @@
       .display { padding: 12px; font-size: 18px; min-height: 45px; }
       .btn { padding: 12px; font-size: 14px; min-height: 45px; }
       .buttons { gap: 6px; }
+      .app-footer { font-size: 10.5px; }
     }
 
     /* Landscape orientation for mobile */
@@ -224,6 +240,7 @@
       .btn { padding: 10px; min-height: 40px; font-size: 14px; }
       .buttons { gap: 5px; }
       .exchange-rate { margin-top: 5px; font-size: 11px; }
+      .app-footer { margin-top: 8px; }
     }
 
     /* High DPI displays */
@@ -281,6 +298,11 @@
 
     <div class="exchange-rate">
       Курс: 1 EUR = 1.95583 BGN
+    </div>
+
+    <!-- ✅ Footer (не е кликаем) -->
+    <div class="app-footer">
+      © 2026 | created by <strong>Teodor Chupetlov</strong>
     </div>
   </div>
 
