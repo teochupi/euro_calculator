@@ -34,10 +34,14 @@
       background: #2c3e50;
       border-radius: 20px;
       padding: 20px;
+      padding-bottom: 14px; /* ✅ място за футъра */
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       max-width: 400px;
       width: 100%;
       min-width: 280px;
+
+      display: flex;              /* ✅ стабилно подреждане */
+      flex-direction: column;     /* ✅ footer остава вътре */
     }
 
     .title {
@@ -191,24 +195,25 @@
       color: white;
     }
 
-    /* ✅ Footer (ненатрапчив, професионален) */
+    /* ✅ Footer (винаги видим, малък, професионален, НЕ кликаем) */
     .app-footer {
-      margin-top: 14px;
+      margin-top: 10px;
       text-align: center;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.55);
-      letter-spacing: 0.2px;
+      font-size: 11px; /* ✅ по-малки букви */
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.3;
+      padding-bottom: env(safe-area-inset-bottom); /* ✅ iPhone safe-area */
     }
 
     .app-footer strong {
-      color: rgba(255, 255, 255, 0.80);
+      color: rgba(255, 255, 255, 0.90);
       font-weight: 600;
     }
 
     /* Mobile optimizations */
     @media (max-width: 480px) {
       body { padding: 5px; }
-      .calculator { padding: 15px; border-radius: 15px; max-width: 100%; }
+      .calculator { padding: 15px; padding-bottom: 12px; border-radius: 15px; max-width: 100%; }
       .title { font-size: 20px; margin-bottom: 15px; }
       .currency-selector { margin-bottom: 15px; gap: 8px; }
       .currency-btn { padding: 10px 15px; font-size: 14px; min-height: 40px; }
@@ -216,31 +221,31 @@
       .buttons { gap: 8px; }
       .btn { padding: 15px; font-size: 16px; min-height: 50px; border-radius: 8px; }
       .exchange-rate { font-size: 12px; margin-top: 10px; }
-      .app-footer { font-size: 11px; margin-top: 12px; }
+      .app-footer { font-size: 10.5px; margin-top: 10px; }
     }
 
     @media (max-width: 320px) {
-      .calculator { padding: 10px; }
+      .calculator { padding: 10px; padding-bottom: 10px; }
       .title { font-size: 18px; }
       .currency-btn { padding: 8px 12px; font-size: 13px; gap: 5px; }
       .flag { width: 20px; height: 14px; }
       .display { padding: 12px; font-size: 18px; min-height: 45px; }
       .btn { padding: 12px; font-size: 14px; min-height: 45px; }
       .buttons { gap: 6px; }
-      .app-footer { font-size: 10.5px; }
+      .app-footer { font-size: 10px; }
     }
 
-    /* Landscape orientation for mobile */
+    /* ✅ Landscape orientation for mobile (махаме max-height, за да не реже футъра) */
     @media (max-height: 500px) and (orientation: landscape) {
       body { padding: 5px; }
-      .calculator { padding: 10px; max-height: 90vh; }
+      .calculator { padding: 10px; padding-bottom: 10px; } /* ✅ без max-height */
       .title { font-size: 18px; margin-bottom: 10px; }
       .currency-selector { margin-bottom: 10px; }
       .display { padding: 10px; margin-bottom: 10px; min-height: 40px; font-size: 18px; }
       .btn { padding: 10px; min-height: 40px; font-size: 14px; }
       .buttons { gap: 5px; }
       .exchange-rate { margin-top: 5px; font-size: 11px; }
-      .app-footer { margin-top: 8px; }
+      .app-footer { margin-top: 6px; }
     }
 
     /* High DPI displays */
@@ -463,7 +468,7 @@
       lastTouchEnd = now;
     }, false);
 
-    // ✅ Service Worker registration (най-добре тук, в края)
+    // ✅ Service Worker registration (в края)
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("./sw.js").catch(console.error);
