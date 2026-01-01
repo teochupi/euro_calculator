@@ -197,23 +197,14 @@
 
     /* ✅ Footer: закотвен най-долу на екрана */
     .app-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 15px 0;
-      padding-bottom: calc(15px + env(safe-area-inset-bottom));
+      margin-top: 20px;
       text-align: center;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.85);
-      z-index: 9999;
-      pointer-events: none;
-      /* Лек градиент отдолу, за да се чете по-добре */
-      background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 100%);
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .app-footer strong {
-      color: #fff;
+      color: rgba(255, 255, 255, 0.90);
       font-weight: 600;
     }
 
@@ -314,11 +305,10 @@
       Курс: 1 EUR = 1.95583 BGN
     </div>
 
-  </div>
-
-  <!-- ✅ Footer (не е кликаем) -->
-  <div class="app-footer">
-    © 2026 | created by <strong>Teodor Chupetlov</strong>
+    <!-- ✅ Footer (не е кликаем) -->
+    <div class="app-footer">
+      © 2026 | created by <strong>Teodor Chupetlov</strong>
+    </div>
   </div>
 
   <script>
