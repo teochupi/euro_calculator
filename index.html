@@ -1,533 +1,452 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EURO Калкулатор</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            margin: 0;
-            padding: 10px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>EURO Калкулатор</title>
 
-        .calculator {
-            background: #2c3e50;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            max-width: 400px;
-            width: 100%;
-            min-width: 280px;
-        }
+  <!-- PWA / Icons -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
-        .title {
-            text-align: center;
-            color: #ecf0f1;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
-        }
+  <!-- iOS / Android "app-like" -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EURO">
+  <meta name="mobile-web-app-capable" content="yes">
 
-        .currency-selector {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            gap: 10px;
-        }
+  <!-- Theme -->
+  <meta name="theme-color" content="#003399">
 
-        .currency-btn {
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 16px;
-            min-height: 44px;
-            flex: 1;
-            justify-content: center;
-        }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      margin: 0;
+      padding: 10px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .currency-btn.active {
-            border-color: #667eea;
-            background: #667eea;
-            color: white;
-        }
+    .calculator {
+      background: #2c3e50;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      max-width: 400px;
+      width: 100%;
+      min-width: 280px;
+    }
 
-        .flag {
-            width: 24px;
-            height: 16px;
-            border-radius: 2px;
-        }
+    .title {
+      text-align: center;
+      color: #ecf0f1;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
 
-        .flag.eu {
-            background: #003399;
-            position: relative;
-        }
+    .currency-selector {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
 
-        .flag.eu::after {
-            content: '★★★★';
-            position: absolute;
-            color: #FFCC00;
-            font-size: 8px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+    .currency-btn {
+      padding: 12px 20px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      min-height: 44px;
+      flex: 1;
+      justify-content: center;
+    }
 
-        .flag.bg {
-            background: linear-gradient(to bottom, white 33%, #00966E 33%, #00966E 66%, #D62612 66%);
-        }
+    .currency-btn.active {
+      border-color: #667eea;
+      background: #667eea;
+      color: white;
+    }
 
-        .display {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: right;
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            word-break: break-all;
-            overflow-wrap: break-word;
-        }
+    .flag {
+      width: 24px;
+      height: 16px;
+      border-radius: 2px;
+    }
 
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
+    .flag.eu {
+      background: #003399;
+      position: relative;
+    }
 
-        .btn {
-            padding: 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            touch-action: manipulation;
-            user-select: none;
-        }
+    .flag.eu::after {
+      content: '★★★★';
+      position: absolute;
+      color: #FFCC00;
+      font-size: 8px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
+    .flag.bg {
+      background: linear-gradient(to bottom, white 33%, #00966E 33%, #00966E 66%, #D62612 66%);
+    }
 
-        .btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+    .display {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: right;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
 
-        .btn.number {
-            background: #f8f9fa;
-            color: #333;
-            border: 2px solid #e9ecef;
-        }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
 
-        .btn.operator {
-            background: #667eea;
-            color: white;
-        }
+    .btn {
+      padding: 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      user-select: none;
+    }
 
-        .btn.equals {
-            background: #28a745;
-            color: white;
-        }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
 
-        .btn.clear {
-            background: #dc3545;
-            color: white;
-        }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
 
-        .btn.convert {
-            background: #17a2b8;
-            color: white;
-            grid-column: span 2;
-        }
+    .btn.number {
+      background: #f8f9fa;
+      color: #333;
+      border: 2px solid #e9ecef;
+    }
 
-        .exchange-rate {
-            text-align: center;
-            margin-top: 15px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .btn.backspace {
-            background: #fd7e14;
-            color: white;
-        }
+    .btn.operator {
+      background: #667eea;
+      color: white;
+    }
 
-        /* Mobile optimizations */
-        @media (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
+    .btn.equals {
+      background: #28a745;
+      color: white;
+    }
 
-            .calculator {
-                padding: 15px;
-                border-radius: 15px;
-                max-width: 100%;
-            }
+    .btn.clear {
+      background: #dc3545;
+      color: white;
+    }
 
-            .title {
-                font-size: 20px;
-                margin-bottom: 15px;
-            }
+    .btn.convert {
+      background: #17a2b8;
+      color: white;
+      grid-column: span 2;
+    }
 
-            .currency-selector {
-                margin-bottom: 15px;
-                gap: 8px;
-            }
+    .exchange-rate {
+      text-align: center;
+      margin-top: 15px;
+      color: #666;
+      font-size: 14px;
+    }
 
-            .currency-btn {
-                padding: 10px 15px;
-                font-size: 14px;
-                min-height: 40px;
-            }
+    .btn.backspace {
+      background: #fd7e14;
+      color: white;
+    }
 
-            .display {
-                padding: 15px;
-                font-size: 20px;
-                min-height: 50px;
-                margin-bottom: 15px;
-            }
+    /* Mobile optimizations */
+    @media (max-width: 480px) {
+      body { padding: 5px; }
+      .calculator { padding: 15px; border-radius: 15px; max-width: 100%; }
+      .title { font-size: 20px; margin-bottom: 15px; }
+      .currency-selector { margin-bottom: 15px; gap: 8px; }
+      .currency-btn { padding: 10px 15px; font-size: 14px; min-height: 40px; }
+      .display { padding: 15px; font-size: 20px; min-height: 50px; margin-bottom: 15px; }
+      .buttons { gap: 8px; }
+      .btn { padding: 15px; font-size: 16px; min-height: 50px; border-radius: 8px; }
+      .exchange-rate { font-size: 12px; margin-top: 10px; }
+    }
 
-            .buttons {
-                gap: 8px;
-            }
+    @media (max-width: 320px) {
+      .calculator { padding: 10px; }
+      .title { font-size: 18px; }
+      .currency-btn { padding: 8px 12px; font-size: 13px; gap: 5px; }
+      .flag { width: 20px; height: 14px; }
+      .display { padding: 12px; font-size: 18px; min-height: 45px; }
+      .btn { padding: 12px; font-size: 14px; min-height: 45px; }
+      .buttons { gap: 6px; }
+    }
 
-            .btn {
-                padding: 15px;
-                font-size: 16px;
-                min-height: 50px;
-                border-radius: 8px;
-            }
+    /* Landscape orientation for mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body { padding: 5px; }
+      .calculator { padding: 10px; max-height: 90vh; }
+      .title { font-size: 18px; margin-bottom: 10px; }
+      .currency-selector { margin-bottom: 10px; }
+      .display { padding: 10px; margin-bottom: 10px; min-height: 40px; font-size: 18px; }
+      .btn { padding: 10px; min-height: 40px; font-size: 14px; }
+      .buttons { gap: 5px; }
+      .exchange-rate { margin-top: 5px; font-size: 11px; }
+    }
 
-            .exchange-rate {
-                font-size: 12px;
-                margin-top: 10px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .calculator {
-                padding: 10px;
-            }
-
-            .title {
-                font-size: 18px;
-            }
-
-            .currency-btn {
-                padding: 8px 12px;
-                font-size: 13px;
-                gap: 5px;
-            }
-
-            .flag {
-                width: 20px;
-                height: 14px;
-            }
-
-            .display {
-                padding: 12px;
-                font-size: 18px;
-                min-height: 45px;
-            }
-
-            .btn {
-                padding: 12px;
-                font-size: 14px;
-                min-height: 45px;
-            }
-
-            .buttons {
-                gap: 6px;
-            }
-        }
-
-        /* Landscape orientation for mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            body {
-                padding: 5px;
-            }
-
-            .calculator {
-                padding: 10px;
-                max-height: 90vh;
-            }
-
-            .title {
-                font-size: 18px;
-                margin-bottom: 10px;
-            }
-
-            .currency-selector {
-                margin-bottom: 10px;
-            }
-
-            .display {
-                padding: 10px;
-                margin-bottom: 10px;
-                min-height: 40px;
-                font-size: 18px;
-            }
-
-            .btn {
-                padding: 10px;
-                min-height: 40px;
-                font-size: 14px;
-            }
-
-            .buttons {
-                gap: 5px;
-            }
-
-            .exchange-rate {
-                margin-top: 5px;
-                font-size: 11px;
-            }
-        }
-
-        /* High DPI displays */
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            .btn {
-                border-width: 1px;
-            }
-        }
-    </style>
+    /* High DPI displays */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .btn { border-width: 1px; }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="calculator">
-        <div class="title">EURO Калкулатор</div>
-        
-        <div class="currency-selector">
-            <button class="currency-btn active" id="eurBtn">
-                <div class="flag eu"></div>
-                EUR
-            </button>
-            <button class="currency-btn" id="bgnBtn">
-                <div class="flag bg"></div>
-                BGN
-            </button>
-        </div>
+  <div class="calculator">
+    <div class="title">EURO Калкулатор</div>
 
-        <div class="display" id="display">0</div>
-
-        <div class="buttons">
-            <button class="btn clear" onclick="clearAll()">C</button>
-            <button class="btn clear" onclick="clearEntry()">CE</button>
-            <button class="btn backspace" onclick="backspace()">←</button>
-            <button class="btn operator" onclick="inputOperator('/')">/</button>
-            
-            <button class="btn number" onclick="inputNumber('7')">7</button>
-            <button class="btn number" onclick="inputNumber('8')">8</button>
-            <button class="btn number" onclick="inputNumber('9')">9</button>
-            <button class="btn operator" onclick="inputOperator('*')">×</button>
-            
-            <button class="btn number" onclick="inputNumber('4')">4</button>
-            <button class="btn number" onclick="inputNumber('5')">5</button>
-            <button class="btn number" onclick="inputNumber('6')">6</button>
-            <button class="btn operator" onclick="inputOperator('-')">-</button>
-            
-            <button class="btn number" onclick="inputNumber('1')">1</button>
-            <button class="btn number" onclick="inputNumber('2')">2</button>
-            <button class="btn number" onclick="inputNumber('3')">3</button>
-            <button class="btn operator" onclick="inputOperator('+')">+</button>
-            
-            <button class="btn number" onclick="inputNumber('0')">0</button>
-            <button class="btn number" onclick="inputNumber('.')">,</button>
-            <button class="btn equals" onclick="calculate()">=</button>
-            <button class="btn convert" onclick="convertCurrency()">Конвертиране</button>
-        </div>
-
-        <div class="exchange-rate">
-            Курс: 1 EUR = 1.95583 BGN
-        </div>
+    <div class="currency-selector">
+      <button class="currency-btn active" id="eurBtn" type="button">
+        <div class="flag eu"></div>
+        EUR
+      </button>
+      <button class="currency-btn" id="bgnBtn" type="button">
+        <div class="flag bg"></div>
+        BGN
+      </button>
     </div>
 
-    <script>
-        const EXCHANGE_RATE = 1.95583;
-        let currentCurrency = 'EUR';
-        let display = document.getElementById('display');
-        let currentInput = '0';
-        let operator = null;
-        let previousInput = null;
-        let waitingForOperand = false;
+    <div class="display" id="display">0</div>
 
-        function updateDisplay() {
-            display.textContent = currentInput;
+    <div class="buttons">
+      <button class="btn clear" type="button" onclick="clearAll()">C</button>
+      <button class="btn clear" type="button" onclick="clearEntry()">CE</button>
+      <button class="btn backspace" type="button" onclick="backspace()">←</button>
+      <button class="btn operator" type="button" onclick="inputOperator('/')">/</button>
+
+      <button class="btn number" type="button" onclick="inputNumber('7')">7</button>
+      <button class="btn number" type="button" onclick="inputNumber('8')">8</button>
+      <button class="btn number" type="button" onclick="inputNumber('9')">9</button>
+      <button class="btn operator" type="button" onclick="inputOperator('*')">×</button>
+
+      <button class="btn number" type="button" onclick="inputNumber('4')">4</button>
+      <button class="btn number" type="button" onclick="inputNumber('5')">5</button>
+      <button class="btn number" type="button" onclick="inputNumber('6')">6</button>
+      <button class="btn operator" type="button" onclick="inputOperator('-')">-</button>
+
+      <button class="btn number" type="button" onclick="inputNumber('1')">1</button>
+      <button class="btn number" type="button" onclick="inputNumber('2')">2</button>
+      <button class="btn number" type="button" onclick="inputNumber('3')">3</button>
+      <button class="btn operator" type="button" onclick="inputOperator('+')">+</button>
+
+      <button class="btn number" type="button" onclick="inputNumber('0')">0</button>
+      <!-- показва "," но въвежда "." (правилно за parseFloat) -->
+      <button class="btn number" type="button" onclick="inputNumber('.')">,</button>
+
+      <button class="btn equals" type="button" onclick="calculate()">=</button>
+      <button class="btn convert" type="button" onclick="convertCurrency()">Конвертиране</button>
+    </div>
+
+    <div class="exchange-rate">
+      Курс: 1 EUR = 1.95583 BGN
+    </div>
+  </div>
+
+  <script>
+    const EXCHANGE_RATE = 1.95583;
+
+    let currentCurrency = 'EUR';
+    const display = document.getElementById('display');
+
+    let currentInput = '0';
+    let operator = null;
+    let previousInput = null;
+    let waitingForOperand = false;
+
+    function updateDisplay() {
+      display.textContent = currentInput;
+    }
+
+    function inputNumber(num) {
+      // Не позволявай 2-ра десетична точка
+      if (num === '.' && currentInput.includes('.')) return;
+
+      if (waitingForOperand) {
+        currentInput = num;
+        waitingForOperand = false;
+      } else {
+        if (currentInput === '0' && num !== '.') {
+          currentInput = num;
+        } else {
+          currentInput += num;
         }
+      }
+      updateDisplay();
+    }
 
-        function inputNumber(num) {
-            if (waitingForOperand) {
-                currentInput = num;
-                waitingForOperand = false;
-            } else {
-                if (currentInput === '0' && num !== '.') {
-                    currentInput = num;
-                } else {
-                    currentInput += num;
-                }
-            }
-            updateDisplay();
-        }
+    function inputOperator(nextOperator) {
+      const inputValue = parseFloat(currentInput);
 
-        function inputOperator(nextOperator) {
-            const inputValue = parseFloat(currentInput);
+      if (previousInput === null) {
+        previousInput = inputValue;
+      } else if (operator) {
+        const currentValue = previousInput || 0;
+        const newValue = performCalculation(currentValue, inputValue, operator);
 
-            if (previousInput === null) {
-                previousInput = inputValue;
-            } else if (operator) {
-                const currentValue = previousInput || 0;
-                const newValue = performCalculation(currentValue, inputValue, operator);
+        currentInput = String(newValue);
+        previousInput = newValue;
+        updateDisplay();
+      }
 
-                currentInput = String(newValue);
-                previousInput = newValue;
-                updateDisplay();
-            }
+      waitingForOperand = true;
+      operator = nextOperator;
+    }
 
-            waitingForOperand = true;
-            operator = nextOperator;
-        }
+    function calculate() {
+      const inputValue = parseFloat(currentInput);
 
-        function calculate() {
-            const inputValue = parseFloat(currentInput);
+      if (previousInput !== null && operator) {
+        const newValue = performCalculation(previousInput, inputValue, operator);
+        currentInput = String(newValue);
+        previousInput = null;
+        operator = null;
+        waitingForOperand = true;
+        updateDisplay();
+      }
+    }
 
-            if (previousInput !== null && operator) {
-                const newValue = performCalculation(previousInput, inputValue, operator);
-                currentInput = String(newValue);
-                previousInput = null;
-                operator = null;
-                waitingForOperand = true;
-                updateDisplay();
-            }
-        }
+    function performCalculation(firstOperand, secondOperand, operator) {
+      switch (operator) {
+        case '+': return firstOperand + secondOperand;
+        case '-': return firstOperand - secondOperand;
+        case '*': return firstOperand * secondOperand;
+        case '/': return firstOperand / secondOperand;
+        default: return secondOperand;
+      }
+    }
 
-        function performCalculation(firstOperand, secondOperand, operator) {
-            switch (operator) {
-                case '+':
-                    return firstOperand + secondOperand;
-                case '-':
-                    return firstOperand - secondOperand;
-                case '*':
-                    return firstOperand * secondOperand;
-                case '/':
-                    return firstOperand / secondOperand;
-                default:
-                    return secondOperand;
-            }
-        }
+    function clearAll() {
+      currentInput = '0';
+      previousInput = null;
+      operator = null;
+      waitingForOperand = false;
+      switchCurrency('EUR');
+      updateDisplay();
+    }
 
-        function clearAll() {
-            currentInput = '0';
-            previousInput = null;
-            operator = null;
-            waitingForOperand = false;
-            switchCurrency('EUR');
-            updateDisplay();
-        }
+    function clearEntry() {
+      currentInput = '0';
+      updateDisplay();
+    }
 
-        function clearEntry() {
-            currentInput = '0';
-            updateDisplay();
-        }
+    function backspace() {
+      if (currentInput.length > 1) {
+        currentInput = currentInput.slice(0, -1);
+      } else {
+        currentInput = '0';
+      }
+      updateDisplay();
+    }
 
-        function backspace() {
-            if (currentInput.length > 1) {
-                currentInput = currentInput.slice(0, -1);
-            } else {
-                currentInput = '0';
-            }
-            updateDisplay();
-        }
+    function convertCurrency() {
+      const value = parseFloat(currentInput);
+      if (isNaN(value)) return;
 
-        function convertCurrency() {
-            const value = parseFloat(currentInput);
-            if (isNaN(value)) return;
+      let convertedValue;
+      if (currentCurrency === 'EUR') {
+        convertedValue = value * EXCHANGE_RATE;
+        switchCurrency('BGN');
+      } else {
+        convertedValue = value / EXCHANGE_RATE;
+        switchCurrency('EUR');
+      }
 
-            let convertedValue;
-            if (currentCurrency === 'EUR') {
-                convertedValue = value * EXCHANGE_RATE;
-                switchCurrency('BGN');
-            } else {
-                convertedValue = value / EXCHANGE_RATE;
-                switchCurrency('EUR');
-            }
+      currentInput = convertedValue.toFixed(4).replace(/\.?0+$/, '');
+      updateDisplay();
+    }
 
-            currentInput = convertedValue.toFixed(4).replace(/\.?0+$/, '');
-            updateDisplay();
-        }
+    function switchCurrency(currency) {
+      currentCurrency = currency;
+      const eurBtn = document.getElementById('eurBtn');
+      const bgnBtn = document.getElementById('bgnBtn');
 
-        function switchCurrency(currency) {
-            currentCurrency = currency;
-            const eurBtn = document.getElementById('eurBtn');
-            const bgnBtn = document.getElementById('bgnBtn');
+      if (currency === 'EUR') {
+        eurBtn.classList.add('active');
+        bgnBtn.classList.remove('active');
+      } else {
+        bgnBtn.classList.add('active');
+        eurBtn.classList.remove('active');
+      }
+    }
 
-            if (currency === 'EUR') {
-                eurBtn.classList.add('active');
-                bgnBtn.classList.remove('active');
-            } else {
-                bgnBtn.classList.add('active');
-                eurBtn.classList.remove('active');
-            }
-        }
+    document.getElementById('eurBtn').addEventListener('click', () => switchCurrency('EUR'));
+    document.getElementById('bgnBtn').addEventListener('click', () => switchCurrency('BGN'));
 
-        // Event listeners за бутоните за валута
-        document.getElementById('eurBtn').addEventListener('click', () => {
-            switchCurrency('EUR');
-        });
+    // Keyboard support
+    document.addEventListener('keydown', (event) => {
+      const key = event.key;
 
-        document.getElementById('bgnBtn').addEventListener('click', () => {
-            switchCurrency('BGN');
-        });
+      if ((key >= '0' && key <= '9') || key === '.' || key === ',') {
+        inputNumber(key === ',' ? '.' : key);
+      } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        inputOperator(key);
+      } else if (key === 'Enter' || key === '=') {
+        calculate();
+      } else if (key === 'Escape' || key === 'c' || key === 'C') {
+        clearAll();
+      } else if (key === 'Backspace') {
+        backspace();
+      }
+    });
 
-        // Keyboard support
-        document.addEventListener('keydown', (event) => {
-            const key = event.key;
-            
-            if (key >= '0' && key <= '9' || key === '.' || key === ',') {
-                inputNumber(key === ',' ? '.' : key);
-            } else if (key === '+' || key === '-' || key === '*' || key === '/') {
-                inputOperator(key);
-            } else if (key === 'Enter' || key === '=') {
-                calculate();
-            } else if (key === 'Escape' || key === 'c' || key === 'C') {
-                clearAll();
-            } else if (key === 'Backspace') {
-                backspace();
-            }
-        });
+    // Prevent zoom on double tap for iOS
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
 
-        // Prevent zoom on double tap for iOS
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-    </script>
+    // ✅ Service Worker registration (най-добре тук, в края)
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(console.error);
+      });
+    }
+  </script>
 </body>
 </html>
